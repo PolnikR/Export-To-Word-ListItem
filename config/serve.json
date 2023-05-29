@@ -1,0 +1,25 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/spfx-serve.schema.json",
+  "port": 4321,
+  "https": true,
+  "serveConfigurations": {
+    "default": {
+      "pageUrl": "https://pozfond.sharepoint.com/sites/poolcars/Lists/acLstCarRequests/Moje%20iadanky.aspx",
+      "customActions": {
+        "5778d1cf-a1a8-433c-88a6-e8944b40911e": {
+          "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
+          "properties": {}
+        }
+      }
+    },
+    "exportToWord": {
+      "pageUrl": "https://pozfond.sharepoint.com/sites/poolcars/Lists/acLstCarRequests/Moje%20iadanky.aspx",
+      "customActions": {
+        "5778d1cf-a1a8-433c-88a6-e8944b40911e": {
+          "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
+          "properties": {}
+        }
+      }
+    }
+  }
+}

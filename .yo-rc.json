@@ -1,0 +1,22 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "16.17.0",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.9.1"
+    },
+    "version": "1.17.2",
+    "libraryName": "export-to-word-list-item",
+    "libraryId": "cf314f6d-3b89-4eed-ba3f-fb7e1c39d8ed",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "export-to-word-list-item",
+    "solutionShortDescription": "export-to-word-list-item description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "extension",
+    "extensionType": "ListViewCommandSet"
+  }
+}
