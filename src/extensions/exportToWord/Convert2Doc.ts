@@ -91,7 +91,7 @@ class Convert2Doc {
     public set CisloZiadanky(cisloziadanky:string){
         this.cisloZiadanky=cisloziadanky
     }
-    public get CisloZiadanky(){
+    public get CisloZiadanky():string{
         return this.cisloZiadanky;
     }
     public async createDocument(): Promise<void> {
@@ -118,7 +118,7 @@ class Convert2Doc {
      */
     private async getItems(): Promise<IListItemsResponse> {
 
-        let allItems: IListItemsResponse = { ok: true, result: [] };
+        const allItems: IListItemsResponse = { ok: true, result: [] };
 
         try {
 
@@ -173,7 +173,7 @@ class Convert2Doc {
 
             // Check if the recent revieved response has the next link
             if (this.response[this.response.length - 1].nextLink) {
-                this.getAllItems(this.response[this.response.length - 1].nextLink);
+                await this.getAllItems(this.response[this.response.length - 1].nextLink);
             }
         }
         catch (e) {
@@ -189,26 +189,38 @@ class Convert2Doc {
     public async getCurrentViewFields(): Promise<void> {
 
         try {
-            let viewId: string = SPCore.getParameterValue(location.href, "viewid");
+            const viewId: string = SPCore.getParameterValue(location.href, "viewid");
             if (viewId) {
-                let view: ISPBaseResponse = await this.commonOperations.queryGETResquest(`${this._webURL}/_api/web/lists/getByTitle('${this.listName}')/Views('${viewId}')/ViewFields`);
-                this.currentViewFields = view.result["Items"];
+                const view: ISPBaseResponse = await this.commonOperations.queryGETResquest(`${this._webURL}/_api/web/lists/getByTitle('${this.listName}')/Views('${viewId}')/ViewFields`);
+                this.currentViewFields = view.result.Items;
             }
             else {
-                let defaultView: IListView = await this.listOperations.getDefaultView(this.listName);
-                let viewFields: IFields = await this.fieldOperations.getFieldsByView(this.listName, defaultView.view["Title"]);
+                const defaultView: IListView = await this.listOperations.getDefaultView(this.listName);
+                const viewFields: IFields = await this.fieldOperations.getFieldsByView(this.listName, defaultView.view.Title);
                 //this.currentViewFields = viewFields.details["Items"];
-                console.log("Vypisujem fields");
-                console.log(viewFields.details);
-            }
+                
+                for(let key in viewFields.details){
+                    if(key==="Items"){
+                        
+                        this.currentViewFields = viewFields.details[key];
+                    }
+                    
 
-            let fieldDetails: IFields = await this.fieldOperations.getFieldsByList(this.listName);
+                }
+                console.log(this.currentViewFields);
+                    
+                }
+                
+                
+            
+
+            const fieldDetails: IFields = await this.fieldOperations.getFieldsByList(this.listName);
             this.listFieldDetails = fieldDetails.details.filter(i => this.currentViewFields.indexOf(i.InternalName) > -1);
 
             // Keep the same orfer that of the fields in the view
-            let orderedFields: any[] = [];
+            const orderedFields: any[] = [];
             this.currentViewFields.forEach(i => {
-                orderedFields.push(this.listFieldDetails.filter(j => j.InternalName == i)[0]);
+                orderedFields.push(this.listFieldDetails.filter(j => j.InternalName === i)[0]);
             });
             this.listFieldDetails = orderedFields;
         }
@@ -241,7 +253,7 @@ class Convert2Doc {
             }
         });
 
-        if ((this.currentViewFields.length == 2 && isSingleLine && isMultiline)) {
+        if ((this.currentViewFields.length === 2 && isSingleLine && isMultiline)) {
             isValidforAnswerMode = true;
         }
         Log.verbose(this._logSource, `${isValidforAnswerMode}, is the response`);
@@ -263,7 +275,7 @@ class Convert2Doc {
 
             html += `<tr style="height:30px"></tr>`;
 
-            let isAlternate: boolean = index % 2 == 0;
+            const isAlternate: boolean = index % 2 === 0;
 
             this.listFieldDetails.forEach(k => {
 
@@ -272,16 +284,16 @@ class Convert2Doc {
                 switch (k.TypeAsString) {
                     case "User":
                     case "Person or Group":
-                        value = i[k.InternalName]["Title"];
+                        value = i[k.InternalName].Title;
                         break;
                     case "Lookup":
                         value = i[k.InternalName][k.LookupField];
                         break;
                     case "TaxonomyFieldType":
-                        value = i[k.InternalName]["Label"];
+                        value = i[k.InternalName].Label;
                         break;
                     case "URL":
-                        value = `<a href="${i[k.InternalName]["Url"]}" style="cursor:pointer;">${i[k.InternalName]["Description"]}</a>`;
+                        value = `<a href="${i[k.InternalName].URL}" style="cursor:pointer;">${i[k.InternalName].Description}</a>`;
                         break;
                     case "DateTime":
                         value = new Date(i[k.InternalName]).toLocaleString();
@@ -336,28 +348,31 @@ class Convert2Doc {
     */
     public generateDocument(sourceHTML: string): void {
 
-        let headerHTML: string = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        const headerHTML: string = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
         <head><meta charset='utf-8'><title>${this.listName}</title></head><body>`;
 
         //let titleHTML: string = `<h1><center>${this.listName}</center></h1><hr></hr>`;
 
-        let footerHTML: string = "</body>My Example</html>";
+        const footerHTML: string = "</body>My Example</html>";
         console.log("Current Views");
-        this.getCurrentViewFields();
+        
         var sourceHTML = headerHTML +  `<div id="source-html">${sourceHTML}</div>` + footerHTML;
         
-        let source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+        const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
         console.log("source");
         console.log(source);
-        let fileDownload = document.createElement("a");
+        const fileDownload = document.createElement("a");
         document.body.appendChild(fileDownload);
         fileDownload.href = source;
         console.log("Cislo ziadanky z object zo setter");
         console.log(this.cisloZiadanky);
+        this.getCurrentViewFields();
         fileDownload.download = `${"Žiadanka"}/${this.cisloZiadanky}.doc`;
         fileDownload.click();
         document.body.removeChild(fileDownload);
     }
 }
+
+
 
 export { Convert2Doc };

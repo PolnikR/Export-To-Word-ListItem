@@ -11,7 +11,9 @@
       ]
     }
   },
-  "externals": {},
+  "externals": {
+   
+  },
   "localizedResources": {
     "ExportToWordCommandSetStrings": "lib/extensions/exportToWord/loc/{locale}.js"
   }

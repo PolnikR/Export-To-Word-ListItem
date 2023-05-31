@@ -9,8 +9,12 @@ import {
 } from '@microsoft/sp-listview-extensibility';
 import { Convert2Doc } from './Convert2Doc';
 //import {getSP } from './pnpjsConfig';
-import { spfi, SPFx } from "@pnp/sp";
+import { spfi, SPFx,  } from "@pnp/sp";
 import "@pnp/sp/profiles";
+
+
+
+//import { LogLevel, PnPLogging } from '@pnp/logging';
 //import { Dialog } from '@microsoft/sp-dialog';
 
 /**
@@ -43,7 +47,7 @@ export default class Export2WordCommandSet extends BaseListViewCommandSet<IExpor
   public onInit(): Promise<void> {
     Log.info(LOG_SOURCE, 'Initialized Export2WordCommandSet');
     this.sp = spfi().using(SPFx(this.context));
-    
+    this.checkIfOpened()
     return Promise.resolve();
   }
 
@@ -70,6 +74,8 @@ export default class Export2WordCommandSet extends BaseListViewCommandSet<IExpor
     }
   }
 
+ 
+
 /**
  * Creates the documents for the selected items only
  * @param event 
@@ -79,6 +85,60 @@ export default class Export2WordCommandSet extends BaseListViewCommandSet<IExpor
   public returnID():string{
     return this.properties.ID.toString();
   }
+
+  public example()
+  {
+    
+  }
+
+  
+  
+  //ts-ignore
+ private checkIfClosed(){
+    const interval = setInterval(():void => {
+        const panelDisplayItem = document.querySelector("div[aria-label='Display item form panel']")
+        console.log('Waiting for Panel to close')
+        if (!panelDisplayItem) {
+          clearInterval(interval); //break the interval
+          this.checkIfOpened()
+        }
+      }, 50);
+      
+  }
+  
+  
+  private checkIfOpened():void{
+    
+    const interval = setInterval(():void=> {
+        const panelDisplayItem = document.querySelector("div[aria-label='Display item form panel']")
+        SP.ClientContext.get_current();
+        console.log('Waiting for Panel to open')
+        if (panelDisplayItem) {
+          clearInterval(interval); //break the interval
+          const createButton= document.createElement('button')
+          createButton.innerText = 'Click_Me'
+          createButton.className = 'ms-Button ms-Button--commandBar ms-CommandBarItem-link hide-label'
+          createButton.addEventListener('click',event=>{
+            console.log('target');
+            console.log(event.target)
+          });
+          
+          const intervalButton = setInterval(():void=> {
+            const buttonToAppendTo = document.querySelector("button[aria-label='Copy link']")
+            if (buttonToAppendTo) {
+              buttonToAppendTo.parentElement.parentElement.append(createButton)
+              clearInterval(intervalButton);
+            }
+          }, 50);
+          this.checkIfClosed()
+        }
+        
+      } ,50);
+      //this.checkIfClosed(),
+      
+        
+  } 
+  
   private  async getUserProperties():Promise<string>{
     //const pageUrl = "https://pozfond.sharepoint.com/sites/poolcars";
     let userManager:string = "";
@@ -165,9 +225,8 @@ export default class Export2WordCommandSet extends BaseListViewCommandSet<IExpor
     
     
         
-
-  
    
+ 
   private dateConvert(dateString:string):string
   { 
     //convert SK datumu na ENG. Pri svk datume 30.6. to zobralo ako 6.30 - invalid date
@@ -180,6 +239,7 @@ export default class Export2WordCommandSet extends BaseListViewCommandSet<IExpor
     //console.log(myDate.toLocaleString("en-US"));
     return myDate.toLocaleString();
   }
+
   private async createDocumentSelectedItems(event: IListViewCommandSetExecuteEventParameters, cnvrt2docx: Convert2Doc):Promise<void> {
 
     let html: string = '<table>';
@@ -453,3 +513,4 @@ export default class Export2WordCommandSet extends BaseListViewCommandSet<IExpor
 
   }
 }
+
