@@ -4,7 +4,7 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://servisac.sharepoint.com/sites/rp/Lists/Departmen%20Manager/AllItems.aspx",
+      "pageUrl": "https://pozfond.sharepoint.com/sites/poolcars/Lists/acLstCarRequests/Moje%20iadanky.aspx",
       "customActions": {
         "5778d1cf-a1a8-433c-88a6-e8944b40911e": {
           "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
@@ -13,7 +13,7 @@
       }
     },
     "exportToWord": {
-      "pageUrl": "https://servisac.sharepoint.com/sites/rp/Lists/Departmen%20Manager/AllItems.aspx",
+      "pageUrl": "https://pozfond.sharepoint.com/sites/poolcars/Lists/acLstCarRequests/Moje%20iadanky.aspx",
       "customActions": {
         "5778d1cf-a1a8-433c-88a6-e8944b40911e": {
           "location": "ClientSideExtension.ListViewCommandSet.CommandBar",
