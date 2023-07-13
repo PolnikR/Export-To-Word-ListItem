@@ -3,7 +3,7 @@
   "solution": {
     "name": "export-to-word-list-item-client-side-solution",
     "id": "cf314f6d-3b89-4eed-ba3f-fb7e1c39d8ed",
-    "version": "1.0.0.0",
+    "version": "1.1.1.1",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
@@ -30,7 +30,7 @@
         "title": "Application Extension - Deployment of custom action",
         "description": "Deploys a custom action with ClientSideComponentId association",
         "id": "994d4fce-909d-4a52-bacb-6fe2612c0e06",
-        "version": "1.0.0.0",
+        "version": "1.1.1.2",
         "assets": {
           "elementManifests": [
             "elements.xml",

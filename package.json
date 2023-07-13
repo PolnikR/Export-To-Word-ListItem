@@ -36,6 +36,7 @@
     "ajv": "^6.12.5",
     "eslint": "8.7.0",
     "gulp": "4.0.2",
+    "html-docx-js-typescript": "^0.1.5",
     "typescript": "4.5.5"
   }
 }

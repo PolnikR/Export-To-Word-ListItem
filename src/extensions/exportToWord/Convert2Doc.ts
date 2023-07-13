@@ -199,7 +199,7 @@ class Convert2Doc {
                 const viewFields: IFields = await this.fieldOperations.getFieldsByView(this.listName, defaultView.view.Title);
                 //this.currentViewFields = viewFields.details["Items"];
                 
-                for(let key in viewFields.details){
+                for(const key in viewFields.details){
                     if(key==="Items"){
                         
                         this.currentViewFields = viewFields.details[key];
@@ -350,7 +350,7 @@ class Convert2Doc {
 
         const headerHTML: string = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
         <head><meta charset='utf-8'><title>${this.listName}</title></head><body>`;
-
+        
         //let titleHTML: string = `<h1><center>${this.listName}</center></h1><hr></hr>`;
 
         const footerHTML: string = "</body>My Example</html>";
@@ -359,17 +359,21 @@ class Convert2Doc {
         var sourceHTML = headerHTML +  `<div id="source-html">${sourceHTML}</div>` + footerHTML;
         
         const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+        //const source = 'data:application/vnd.openxmlformats-officedocument.wordprocessingml.document' + encodeURIComponent(sourceHTML);
+        
         console.log("source");
         console.log(source);
         const fileDownload = document.createElement("a");
         document.body.appendChild(fileDownload);
         fileDownload.href = source;
+        
         console.log("Cislo ziadanky z object zo setter");
         console.log(this.cisloZiadanky);
         this.getCurrentViewFields();
         fileDownload.download = `${"Žiadanka"}/${this.cisloZiadanky}.doc`;
         fileDownload.click();
         document.body.removeChild(fileDownload);
+        
     }
 }
 
